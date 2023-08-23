@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import TaskList from "./Tasklist.js";
+import AddBook from "./AddBook.js";
 
-function App() {
+export default function TaskApp() {
+  const [books, setBooks] = useState([]);
+
+  function handleBook(title) {
+    setBooks([
+      ...books,
+      {
+        title: title,
+        done: false,
+      },
+    ]);
+  }
+
+  function handleChangeBook(nextBook) {
+    setBooks(
+      books.map((t) => {
+        if (t.id === nextBook.id) {
+          return nextBook;
+        } else {
+          return t;
+        }
+      })
+    );
+  }
+
+  function handleDeleteBook(bookId) {
+    setBooks(books.filter((t) => t.id !== bookId));
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <AddBook onAddBook={handleBook} />
+      <TaskList
+        data={books}
+        onChangeBook={handleChangeBook}
+        onDeleteBook={handleDeleteBook}
+      />
+    </>
   );
 }
-
-export default App;
